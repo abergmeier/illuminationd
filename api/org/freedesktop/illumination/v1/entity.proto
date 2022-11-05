@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package org.freedesktop.illumination.v1;
+
+message Settings {
+    bool on = 2;
+    google.protobuf.Any brightness = 3;
+    google.protobuf.Any color_temperature = 16;
+}
+
+message GetSettingsRequest {
+    fixed64 entity_id = 1;
+}
+
+message GetSettingsResponse {
+    Settings current = 1;
+}
+
+message SetSettingsRequest {
+    fixed64 entity_id = 1;
+    Settings new = 2;
+}
+
+message SetSettingsResponse {
+}
+
+message EntitiesServiceEventsRequest {
+    fixed64 entity_id = 1;
+}
+
+message AddedEntity {
+
+}
+
+message RemovedEntity {
+}
+
+message EntitySettingsChanged {
+    
+}
+
+message EntitiesServiceEventsResponse {
+    oneof events {
+        AddedEntity added = 1;
+        RemovedEntity removed = 2;
+        EntitySettingsChanged settings_changed = 3;
+    }
+}
+
+
+service EntitiesService {
+    rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse) {}
+    rpc SetSettings (SetSettingsRequest) returns (SetSettingsResponse) {}
+    rpc Events(EntitiesServiceEventsRequest) returns (stream EntitiesServiceEventsResponse) {}
+}
